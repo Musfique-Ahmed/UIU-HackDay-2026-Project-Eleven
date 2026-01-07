@@ -44,21 +44,24 @@
         .last-item .timeline-connector {
             display: none;
         }
+
+        .riddle-card {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            transition: all 0.3s ease;
+        }
     </style>
     <!-- Chosen Palette: Slate & Indigo - Professional, clean, and focus-oriented. -->
     <!-- Application Structure Plan: 
          1. Hero Section: Personal context (Musfique) and Event goals.
-         2. The Winning Equation (Rubric Analysis): Interactive comparison of the two award categories to visualize where effort should be allocated.
-         3. The 6-Hour Battle Plan (Interactive Timeline): The core feature. A navigable timeline of the event day. Clicking a time slot reveals specific tactical advice, prohibited/allowed tools, and focus areas derived from the roadmap.
-         4. Tech Stack Strategy: A comparison view of the recommended stacks.
-         5. Logistics & Checklist: Interactive pre-event preparation list.
-         Rationale: This structure moves from "Why/What" (Strategy) to "When" (Timeline) to "How" (Tech/Logistics), mirroring the mental preparation process.
+         2. The Winning Equation (Rubric Analysis): Interactive comparison of the two award categories.
+         3. The 6-Hour Battle Plan (Interactive Timeline): The core feature.
+         4. Tech Stack Strategy: A comparison view.
+         5. Theme Simulation (NEW): A practice area for the "Theme Wonder" riddles with multiple scenarios.
+         6. Logistics & Checklist: Interactive pre-event preparation list.
     -->
     <!-- Visualization & Content Choices:
-         1. Rubric Weights: Chart.js Doughnut Charts. Goal: Inform/Compare. Justification: Quickly shows the composition of the final score for each award type.
-         2. Timeline: Custom HTML/Tailwind vertical flow. Goal: Change/Guide. Interaction: Click to expand details. Justification: Linear progression of time fits the event format perfectly.
-         3. Tech Stack: Info Cards. Goal: Inform.
-         4. Checklist: Interactive HTML checkboxes. Goal: Organize.
+         ...existing choices...
+         5. Theme Simulation: Interactive Reveal Cards with Navigation. Goal: Change/Practice.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
@@ -74,8 +77,8 @@
             <nav class="hidden md:flex space-x-8">
                 <button onclick="scrollToSection('strategy')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Winning Equation</button>
                 <button onclick="scrollToSection('timeline')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Battle Plan</button>
+                <button onclick="scrollToSection('simulation')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Practice</button>
                 <button onclick="scrollToSection('tech')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Tech Stack</button>
-                <button onclick="scrollToSection('checklist')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Checklist</button>
             </nav>
         </div>
     </header>
@@ -170,6 +173,88 @@
                         <div class="p-6 bg-slate-50 rounded-full mb-4 text-4xl">👆</div>
                         <h3 class="text-xl font-bold text-slate-400">Select a time block</h3>
                         <p class="text-slate-400 mt-2">Click on the schedule to reveal tactical advice.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Theme Simulation (UPDATED with Multiple Practices) -->
+        <section id="simulation" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center">
+                    <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 text-sm">P</span>
+                    Practice Arena: Theme Wonder
+                </h2>
+                <p class="text-slate-600 mt-2">
+                    This simulates the <strong>09:00 AM "No AI"</strong> condition. Read the riddle, brainstorm, then reveal the Data Science pivot.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                <!-- The Riddle Card -->
+                <div class="riddle-card rounded-2xl shadow-xl p-8 text-white relative overflow-hidden flex flex-col min-h-[400px]">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-serif">?</div>
+                    
+                    <!-- Riddle Content -->
+                    <div class="flex-grow">
+                        <h3 id="riddle-title" class="text-indigo-200 font-bold uppercase tracking-widest text-sm mb-2">Theme Wonder 001</h3>
+                        <h4 class="text-3xl font-bold mb-6">The Invisible Weaver</h4>
+                        <p id="riddle-text" class="text-xl italic font-serif leading-relaxed opacity-90 mb-8">
+                            "I bind the distant without threads. I build cities without stones. I am strongest when shared, but vanish when severed. I speak every language, yet have no mouth. What am I?"
+                        </p>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="border-t border-indigo-400/30 pt-6">
+                        <div class="flex space-x-4 mb-4">
+                            <button onclick="revealHint('standard')" class="flex-1 px-4 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors border border-indigo-400/30">
+                                1. Reveal Standard Idea
+                            </button>
+                            <button onclick="revealHint('datascience')" class="flex-1 px-4 py-3 bg-white text-indigo-900 hover:bg-gray-100 rounded-lg text-sm font-bold transition-colors shadow-lg">
+                                2. Reveal DS Pivot
+                            </button>
+                        </div>
+                        <button onclick="nextRiddle()" class="w-full px-4 py-2 bg-indigo-800/50 hover:bg-indigo-800 rounded-lg text-xs font-medium uppercase tracking-wider text-indigo-200 transition-colors">
+                            Next Challenge ➔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interpretation Panel -->
+                <div class="space-y-6">
+                    <!-- Placeholder when nothing revealed -->
+                    <div id="hint-placeholder" class="bg-slate-100 p-8 rounded-xl border border-slate-200 border-dashed text-center flex flex-col items-center justify-center h-full min-h-[200px]">
+                        <span class="text-4xl mb-4">🧠</span>
+                        <h4 class="text-slate-500 font-bold text-sm uppercase tracking-wide">Brainstorming Phase</h4>
+                        <p class="text-slate-400 mt-2 text-sm max-w-xs">Don't click reveal yet! Spend 2 minutes writing down your interpretation using the SCAMPER method.</p>
+                    </div>
+
+                    <!-- Standard (Dynamic Content) -->
+                    <div id="hint-standard" class="hidden bg-white p-6 rounded-xl border border-slate-200 border-l-4 border-l-slate-400 shadow-sm transition-all duration-300">
+                        <h4 class="text-slate-500 font-bold text-xs uppercase tracking-wide mb-2">Standard Interpretation</h4>
+                        <p id="standard-title" class="text-lg font-medium text-slate-800">The Internet / Connection</p>
+                        <p id="standard-desc" class="text-slate-600 mt-2 text-sm">Most teams will build a chat app. Proficient but boring.</p>
+                    </div>
+
+                    <!-- Data Science (Dynamic Content) -->
+                    <div id="hint-datascience" class="hidden bg-white p-6 rounded-xl border border-slate-200 border-l-4 border-l-indigo-600 shadow-md transition-all duration-300">
+                        <h4 class="text-indigo-600 font-bold text-xs uppercase tracking-wide mb-2">The Musfique / Data Science Angle</h4>
+                        <p id="ds-title" class="text-lg font-bold text-slate-900">Graph Theory & Network Analysis</p>
+                        <ul class="space-y-3 mt-4 text-slate-700 text-sm">
+                            <li class="flex items-start">
+                                <span class="bg-indigo-100 text-indigo-700 rounded px-2 py-0.5 text-xs font-bold mr-2 mt-0.5 flex-shrink-0">Concept</span>
+                                <span id="ds-concept">Nodes & Edges representation.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-indigo-100 text-indigo-700 rounded px-2 py-0.5 text-xs font-bold mr-2 mt-0.5 flex-shrink-0">Execution</span>
+                                <span id="ds-execution">NLP analysis of social text.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-indigo-100 text-indigo-700 rounded px-2 py-0.5 text-xs font-bold mr-2 mt-0.5 flex-shrink-0">Project</span>
+                                <em id="ds-project">"EchoChamber Breaker"</em>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -375,12 +460,61 @@
             "Boilerplate Code Written"
         ];
 
+        // --- RIDDLE DATA ---
+        const riddles = [
+            {
+                title: "Theme Wonder 001",
+                text: "\"I bind the distant without threads. I build cities without stones. I am strongest when shared, but vanish when severed. I speak every language, yet have no mouth. What am I?\"",
+                standard: {
+                    title: "The Internet / Connection",
+                    desc: "Most teams will build a chat app or social network. (Proficient - 3/4)"
+                },
+                ds: {
+                    title: "Graph Theory & Network Analysis",
+                    concept: "Binding without threads = Nodes & Edges.",
+                    execution: "NLP Analysis of hidden community clusters in text.",
+                    project: "\"EchoChamber Breaker\""
+                }
+            },
+            {
+                title: "Theme Wonder 002",
+                text: "\"I have no eyes, but I see what is to come. I have no voice, but I tell you when to run. I am built from the past, but I only live for tomorrow. What am I?\"",
+                standard: {
+                    title: "A Weather App / Alarm Clock",
+                    desc: "Simple notification apps. Common and unoriginal. (Beginning - 2/4)"
+                },
+                ds: {
+                    title: "Predictive Analytics & Time Series",
+                    concept: "Built from past, lives for tomorrow = Historical Training Data.",
+                    execution: "Stock/Traffic/Flood prediction using Regression models.",
+                    project: "\"FutureSight: Urban Risk Predictor\""
+                }
+            },
+            {
+                title: "Theme Wonder 003",
+                text: "\"I am a crowd of millions, yet I have no face. I hide in the chaos, waiting for a trace. Alone I am nothing, together I am a trend. What am I?\"",
+                standard: {
+                    title: "Voting App / Survey Tool",
+                    desc: "Collecting opinions. Functional but basic. (Developing - 2/4)"
+                },
+                ds: {
+                    title: "Unsupervised Learning & Clustering",
+                    concept: "Hide in chaos, together a trend = Anomaly Detection.",
+                    execution: "K-Means Clustering on public datasets to find hidden patterns.",
+                    project: "\"CrowdPulse: Anomaly Detector\""
+                }
+            }
+        ];
+
+        let currentRiddleIndex = 0;
+
         // --- INITIALIZATION ---
 
         document.addEventListener('DOMContentLoaded', () => {
             initCharts();
             renderTimeline();
             renderChecklist();
+            renderRiddle(0); // Init first riddle
         });
 
         function scrollToSection(id) {
@@ -544,6 +678,53 @@
                     }
                 });
             });
+        }
+
+        // --- SIMULATION LOGIC ---
+        
+        function renderRiddle(index) {
+            const data = riddles[index];
+            
+            // Text Updates
+            document.getElementById('riddle-title').innerText = data.title;
+            document.getElementById('riddle-text').innerText = data.text;
+            
+            // Standard Content
+            document.getElementById('standard-title').innerText = data.standard.title;
+            document.getElementById('standard-desc').innerText = data.standard.desc;
+            
+            // DS Content
+            document.getElementById('ds-title').innerText = data.ds.title;
+            document.getElementById('ds-concept').innerText = data.ds.concept;
+            document.getElementById('ds-execution').innerText = data.ds.execution;
+            document.getElementById('ds-project').innerText = data.ds.project;
+            
+            // Reset Views
+            document.getElementById('hint-placeholder').classList.remove('hidden');
+            document.getElementById('hint-standard').classList.add('hidden');
+            document.getElementById('hint-datascience').classList.add('hidden');
+        }
+
+        function nextRiddle() {
+            currentRiddleIndex = (currentRiddleIndex + 1) % riddles.length;
+            renderRiddle(currentRiddleIndex);
+        }
+
+        function revealHint(type) {
+            const placeholder = document.getElementById('hint-placeholder');
+            const standard = document.getElementById('hint-standard');
+            const datascience = document.getElementById('hint-datascience');
+
+            // Hide placeholder in all reveal cases
+            placeholder.classList.add('hidden');
+
+            if (type === 'standard') {
+                standard.classList.remove('hidden');
+                datascience.classList.add('hidden');
+            } else if (type === 'datascience') {
+                standard.classList.add('hidden');
+                datascience.classList.remove('hidden');
+            }
         }
 
     </script>
