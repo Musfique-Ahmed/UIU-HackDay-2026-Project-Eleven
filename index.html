@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIU HackDay 2026: Category 2 Strategic Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 500px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px; 
+            max-height: 350px;
+        }
+
+        .timeline-connector {
+            position: absolute;
+            left: 24px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background-color: #e2e8f0;
+            z-index: 0;
+        }
+        .last-item .timeline-connector {
+            display: none;
+        }
+    </style>
+    <!-- Chosen Palette: Slate & Indigo - Professional, clean, and focus-oriented. -->
+    <!-- Application Structure Plan: 
+         1. Hero Section: Personal context (Musfique) and Event goals.
+         2. The Winning Equation (Rubric Analysis): Interactive comparison of the two award categories to visualize where effort should be allocated.
+         3. The 6-Hour Battle Plan (Interactive Timeline): The core feature. A navigable timeline of the event day. Clicking a time slot reveals specific tactical advice, prohibited/allowed tools, and focus areas derived from the roadmap.
+         4. Tech Stack Strategy: A comparison view of the recommended stacks.
+         5. Logistics & Checklist: Interactive pre-event preparation list.
+         Rationale: This structure moves from "Why/What" (Strategy) to "When" (Timeline) to "How" (Tech/Logistics), mirroring the mental preparation process.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Rubric Weights: Chart.js Doughnut Charts. Goal: Inform/Compare. Justification: Quickly shows the composition of the final score for each award type.
+         2. Timeline: Custom HTML/Tailwind vertical flow. Goal: Change/Guide. Interaction: Click to expand details. Justification: Linear progression of time fits the event format perfectly.
+         3. Tech Stack: Info Cards. Goal: Inform.
+         4. Checklist: Interactive HTML checkboxes. Goal: Organize.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+
+    <!-- Navigation / Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">🚀</span>
+                <h1 class="text-xl font-bold text-slate-900 tracking-tight">UIU HackDay 2026 <span class="text-indigo-600 font-medium">Command Center</span></h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <button onclick="scrollToSection('strategy')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Winning Equation</button>
+                <button onclick="scrollToSection('timeline')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Battle Plan</button>
+                <button onclick="scrollToSection('tech')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Tech Stack</button>
+                <button onclick="scrollToSection('checklist')" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Checklist</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Introduction -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+            <div class="max-w-3xl">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Profile: Musfique Ahmed (Data Science)</h2>
+                <p class="text-lg text-slate-600 mb-6">
+                    This dashboard is your strategic roadmap for <strong>Category 2 (Trimester 5–8)</strong>. 
+                    Your mission is to balance your Data Science strengths (Python/SQL) with the requirement for a "Best UI/UX" award-winning interface.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-50 text-indigo-700 font-medium text-sm">
+                        🎯 Target: Best Idea & Best UI/UX
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 font-medium text-sm">
+                        🐍 Stack: Python Centric
+                    </div>
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-amber-50 text-amber-700 font-medium text-sm">
+                        ⏱️ Duration: 6 Hours
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: The Winning Equation (Rubric) -->
+        <section id="strategy" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center">
+                    <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 text-sm">1</span>
+                    The Winning Equation
+                </h2>
+                <p class="text-slate-600 mt-2 max-w-4xl">
+                    Understanding the judging rubric is critical. You are fighting on two fronts. Notice how "Best Idea" rewards your backend/logic skills, while "Best UI/UX" demands visual excellence. Use the charts below to understand where to allocate your time.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Chart 1: Best Idea -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">🏆 Target: Best Idea</h3>
+                    <div class="chart-container">
+                        <canvas id="ideaChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-4 bg-indigo-50 rounded-lg text-sm text-indigo-800">
+                        <strong>Strategy:</strong> <span class="font-bold">40%</span> of the score is "Originality". Don't take the riddle literally. Use SCAMPER to brainstorm.
+                    </div>
+                </div>
+
+                <!-- Chart 2: Best UI/UX -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">🎨 Target: Best UI/UX</h3>
+                    <div class="chart-container">
+                        <canvas id="uiChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-4 bg-pink-50 rounded-lg text-sm text-pink-800">
+                        <strong>Strategy:</strong> <span class="font-bold">40%</span> is pure Design. Aesthetics, whitespace, and "wow" factor matter more than complex logic here.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Battle Plan (Timeline) -->
+        <section id="timeline" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center">
+                    <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 text-sm">2</span>
+                    The 6-Hour Battle Plan
+                </h2>
+                <p class="text-slate-600 mt-2">
+                    An hour-by-hour execution guide derived from the event timeline. Click on any time block to see the specific tactical instructions for that phase.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Interactive Timeline List -->
+                <div class="lg:col-span-1 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 font-semibold text-slate-700">
+                        Event Schedule
+                    </div>
+                    <div class="p-4 space-y-0" id="timelineList">
+                        <!-- Javascript will populate this -->
+                    </div>
+                </div>
+
+                <!-- Detail View Panel -->
+                <div class="lg:col-span-2">
+                    <div id="timelineDetailPanel" class="bg-white rounded-xl border border-indigo-100 shadow-md h-full sticky top-24 p-8 flex flex-col justify-center items-center text-center transition-all duration-300">
+                        <div class="p-6 bg-slate-50 rounded-full mb-4 text-4xl">👆</div>
+                        <h3 class="text-xl font-bold text-slate-400">Select a time block</h3>
+                        <p class="text-slate-400 mt-2">Click on the schedule to reveal tactical advice.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Tech Stack Strategy -->
+        <section id="tech" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center">
+                    <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 text-sm">3</span>
+                    Technical Stack Strategy
+                </h2>
+                <p class="text-slate-600 mt-2">
+                    Leverage your Python/SQL expertise. Do not attempt to learn a full new stack on event day. Choose the path that balances speed with visual appeal.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Option A -->
+                <div class="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-md transition-shadow">
+                    <div class="text-amber-600 font-bold mb-2 text-sm uppercase tracking-wide">Option A: Speed</div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Streamlit + Extras</h3>
+                    <p class="text-slate-600 text-sm mb-4">
+                        Python-only dashboarding. Extremely fast to build.
+                    </p>
+                    <ul class="text-sm space-y-2 text-slate-600 mb-4">
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> Zero frontend code</li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> Great for data visualization</li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">✘</span> Hard to style for "Best UI"</li>
+                    </ul>
+                    <div class="mt-auto pt-4 border-t border-slate-100 text-xs text-slate-400">
+                        Risk: Low <br> Reward: Moderate
+                    </div>
+                </div>
+
+                <!-- Option B -->
+                <div class="bg-white rounded-xl border-2 border-indigo-600 p-6 shadow-lg transform scale-105 relative">
+                    <div class="absolute top-0 right-0 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">RECOMMENDED</div>
+                    <div class="text-indigo-600 font-bold mb-2 text-sm uppercase tracking-wide">Option B: Balanced</div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Flet (Flutter for Python)</h3>
+                    <p class="text-slate-600 text-sm mb-4">
+                        Build modern, responsive GUIs using only Python.
+                    </p>
+                    <ul class="text-sm space-y-2 text-slate-600 mb-4">
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> Native-app look & feel</li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> Python backend logic</li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> Good customizability</li>
+                    </ul>
+                    <div class="mt-auto pt-4 border-t border-slate-100 text-xs text-slate-400">
+                        Risk: Moderate <br> Reward: High
+                    </div>
+                </div>
+
+                <!-- Option C -->
+                <div class="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-md transition-shadow">
+                    <div class="text-emerald-600 font-bold mb-2 text-sm uppercase tracking-wide">Option C: Best UI</div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">React + FastAPI</h3>
+                    <p class="text-slate-600 text-sm mb-4">
+                        Industry standard separation of concerns.
+                    </p>
+                    <ul class="text-sm space-y-2 text-slate-600 mb-4">
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> Ultimate UI control</li>
+                        <li class="flex items-start"><span class="text-green-500 mr-2">✔</span> Tailwind integration easy</li>
+                        <li class="flex items-start"><span class="text-red-500 mr-2">✘</span> High complexity for 6 hours</li>
+                    </ul>
+                    <div class="mt-auto pt-4 border-t border-slate-100 text-xs text-slate-400">
+                        Risk: High <br> Reward: Maximum
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Checklist -->
+        <section id="checklist" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center">
+                    <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 text-sm">4</span>
+                    Pre-Event Logistics
+                </h2>
+                <p class="text-slate-600 mt-2">
+                    Don't let logistics fail you. Ensure these items are ready before 08:30 AM.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="checklistContainer">
+                    <!-- Checkboxes populated by JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 mt-12 py-8 text-center">
+        <p class="text-slate-500 text-sm">
+            Generated for <strong>UIU HackDay 2026</strong> Preparation. Good luck, President.
+        </p>
+    </footer>
+
+    <script>
+        // --- DATA & STATE ---
+
+        // Rubric Data
+        const rubricData = {
+            idea: {
+                labels: ['Idea Originality (40%)', 'Logic & Impl (20%)', 'Execution (20%)', 'Presentation (10%)', 'UI/UX (10%)'],
+                data: [40, 20, 20, 10, 10],
+                colors: ['#4f46e5', '#94a3b8', '#cbd5e1', '#e2e8f0', '#f1f5f9'] // Indigo primary
+            },
+            ui: {
+                labels: ['UI/UX Design (40%)', 'Logic & Impl (20%)', 'Execution (20%)', 'Presentation (10%)', 'Idea (10%)'],
+                data: [40, 20, 20, 10, 10],
+                colors: ['#ec4899', '#94a3b8', '#cbd5e1', '#e2e8f0', '#f1f5f9'] // Pink primary
+            }
+        };
+
+        // Timeline Data
+        const schedule = [
+            {
+                time: "08:30 AM",
+                title: "Registration",
+                icon: "📝",
+                type: "logistics",
+                details: "Collect ID card, find assigned table, check power outlets, and set up the laptop environment.",
+                tactics: ["Test hotspot connectivity.", "Open VS Code and Database viewer.", "Eat a light breakfast."]
+            },
+            {
+                time: "09:00 AM",
+                title: "Theme Selection (No AI)",
+                icon: "📵",
+                type: "critical",
+                details: "You receive the 'Theme Wonder' (Riddle). No Internet or AI tools allowed.",
+                tactics: ["Use SCAMPER technique.", "Don't interpret the riddle literally.", "Think: How can a Data Science concept solve this?", "Submit idea via QR code."]
+            },
+            {
+                time: "09:30 AM",
+                title: "Dev Sprint: Database",
+                icon: "🗄️",
+                type: "dev",
+                details: "Development starts. AI tools are now allowed.",
+                tactics: ["Design DB Schema immediately (Efficient DB usage is graded).", "Use SQLite + SQLAlchemy.", "Don't over-normalize tables."]
+            },
+            {
+                time: "10:00 AM",
+                title: "Dev Sprint: Logic MVP",
+                icon: "⚙️",
+                type: "dev",
+                details: "Build the core functionality (Backend).",
+                tactics: ["Get the API running (FastAPI/Flask).", "Use AI to generate boilerplate code.", "Ensure basic data flow works."]
+            },
+            {
+                time: "11:30 AM",
+                title: "The UI/UX Pivot",
+                icon: "🎨",
+                type: "critical",
+                details: "Stop backend work. Switch entirely to Frontend.",
+                tactics: ["Apply consistent color palette.", "Add loading states/animations.", "Ensure whitespace and card layouts.", "Responsive design check."]
+            },
+            {
+                time: "01:00 PM",
+                title: "1st Judgement (Idea)",
+                icon: "🎤",
+                type: "milestone",
+                details: "2 Mins Presentation + 1 Min Q&A. Non-Technical.",
+                tactics: ["Hook: State the problem clearly.", "Sol: Explain unique approach.", "Flex: Mention NLP/SQL backend.", "Have a clickable demo ready."]
+            },
+            {
+                time: "01:30 PM",
+                title: "Polish & Integration",
+                icon: "✨",
+                type: "dev",
+                details: "Refining the application based on initial feedback.",
+                tactics: ["Populate DB with realistic dummy data.", "Fix 'Happy Path' bugs.", "No new features after 3:00 PM."]
+            },
+            {
+                time: "04:00 PM",
+                title: "Code Submission",
+                icon: "📤",
+                type: "milestone",
+                details: "Submit final code to GitHub.",
+                tactics: ["Ensure README is clear.", "Clean up comments.", "Record a 30s demo video as backup."]
+            },
+            {
+                time: "06:30 PM",
+                title: "Results & Closing",
+                icon: "🏆",
+                type: "logistics",
+                details: "Winner announcement in UIU Multipurpose Hall.",
+                tactics: ["Relax.", "Network with other devs."]
+            }
+        ];
+
+        // Checklist Data
+        const checklistItems = [
+            "Laptop + Charger",
+            "Multi-plug extension",
+            "Phone Hotspot (Backup Net)",
+            "Water Bottle + Snacks",
+            "VS Code Installed",
+            "Python Env Ready",
+            "DB Driver (DBeaver/SQLite)",
+            "Github Repo Template Created",
+            "Boilerplate Code Written"
+        ];
+
+        // --- INITIALIZATION ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            renderTimeline();
+            renderChecklist();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- CHARTS ---
+
+        function initCharts() {
+            // Shared config
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.label}: ${context.raw}%`;
+                            }
+                        }
+                    }
+                },
+                cutout: '60%'
+            };
+
+            // Chart 1: Idea
+            new Chart(document.getElementById('ideaChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: rubricData.idea.labels,
+                    datasets: [{
+                        data: rubricData.idea.data,
+                        backgroundColor: rubricData.idea.colors,
+                        borderWidth: 0
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Chart 2: UI
+            new Chart(document.getElementById('uiChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: rubricData.ui.labels,
+                    datasets: [{
+                        data: rubricData.ui.data,
+                        backgroundColor: rubricData.ui.colors,
+                        borderWidth: 0
+                    }]
+                },
+                options: commonOptions
+            });
+        }
+
+        // --- TIMELINE LOGIC ---
+
+        function renderTimeline() {
+            const container = document.getElementById('timelineList');
+            
+            schedule.forEach((item, index) => {
+                const isLast = index === schedule.length - 1;
+                
+                const div = document.createElement('div');
+                div.className = `relative pl-8 pr-4 py-4 cursor-pointer hover:bg-indigo-50 transition-colors group ${isLast ? 'last-item' : ''}`;
+                div.onclick = () => showTimelineDetail(index);
+                
+                // Connector line
+                const connector = document.createElement('div');
+                connector.className = "timeline-connector";
+                
+                // Dot
+                const dot = document.createElement('div');
+                dot.className = `absolute left-4 top-5 w-4 h-4 rounded-full border-2 border-white shadow-sm z-10 
+                    ${item.type === 'critical' ? 'bg-red-500' : item.type === 'milestone' ? 'bg-indigo-600' : 'bg-slate-400'}
+                    group-hover:scale-125 transition-transform`;
+                
+                // Content
+                const content = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">${item.time}</span>
+                        <span class="text-lg">${item.icon}</span>
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-800 mt-1">${item.title}</h4>
+                `;
+                
+                div.innerHTML = content;
+                div.appendChild(connector);
+                div.appendChild(dot);
+                container.appendChild(div);
+            });
+        }
+
+        function showTimelineDetail(index) {
+            const item = schedule[index];
+            const panel = document.getElementById('timelineDetailPanel');
+            
+            // Determine border color based on type
+            let borderColor = 'border-slate-200';
+            let bgHeader = 'bg-slate-50';
+            if (item.type === 'critical') { borderColor = 'border-red-200'; bgHeader = 'bg-red-50'; }
+            if (item.type === 'milestone') { borderColor = 'border-indigo-200'; bgHeader = 'bg-indigo-50'; }
+
+            // Build list of tactics
+            const tacticsHtml = item.tactics.map(t => `<li class="flex items-start mb-2"><span class="text-indigo-500 mr-2">➤</span> ${t}</li>`).join('');
+
+            const content = `
+                <div class="w-full text-left">
+                    <div class="flex items-center justify-between mb-4 border-b ${borderColor} pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wide block">${item.time}</span>
+                            <h3 class="text-2xl font-bold text-slate-900">${item.title}</h3>
+                        </div>
+                        <div class="text-4xl bg-white p-2 rounded-lg shadow-sm">${item.icon}</div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase mb-2">Objective</h4>
+                        <p class="text-slate-700 leading-relaxed">${item.details}</p>
+                    </div>
+
+                    <div class="${bgHeader} rounded-xl p-5 border ${borderColor}">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-3">Tactical Advice</h4>
+                        <ul class="text-sm text-slate-700">
+                            ${tacticsHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            panel.innerHTML = content;
+            panel.className = `bg-white rounded-xl border ${borderColor} shadow-md h-full sticky top-24 p-8 flex flex-col justify-start items-start transition-all duration-300`;
+        }
+
+        // --- CHECKLIST LOGIC ---
+
+        function renderChecklist() {
+            const container = document.getElementById('checklistContainer');
+            
+            checklistItems.forEach((item, index) => {
+                const id = `check-${index}`;
+                const div = document.createElement('div');
+                div.className = "flex items-center space-x-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors";
+                
+                div.innerHTML = `
+                    <input type="checkbox" id="${id}" class="w-5 h-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 cursor-pointer">
+                    <label for="${id}" class="text-slate-700 text-sm font-medium cursor-pointer select-none">${item}</label>
+                `;
+                
+                container.appendChild(div);
+                
+                // Add click handler to toggle style
+                const checkbox = div.querySelector('input');
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        div.classList.add('bg-green-50', 'border-green-200');
+                        div.querySelector('label').classList.add('text-green-700', 'line-through');
+                    } else {
+                        div.classList.remove('bg-green-50', 'border-green-200');
+                        div.querySelector('label').classList.remove('text-green-700', 'line-through');
+                    }
+                });
+            });
+        }
+
+    </script>
+</body>
+</html>
